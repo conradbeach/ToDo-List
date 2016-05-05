@@ -1,0 +1,201 @@
+/* General */
+
+body {
+  max-width: 90%;
+  font: normal 16px Helvetica, Arial, sans-serif;
+}
+
+.highlighted {
+  color: #fff !important;
+  background-color: #148fd5 !important;
+  border-radius: 50px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+/* Nav */
+
+nav {
+  background-color: #464f77;
+  color: #fff;
+  font-weight: 200;
+  font-size: 0.8em;
+  float: left;
+  width: 335px;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 75px 35px 0 135px;
+}
+
+nav h1:before {
+  display: inline-block;
+  vertical-align: middle;
+  width: 26px;
+  height: 26px;
+  padding-right: 10px;
+  margin-left: -36px;
+  content: "";
+}
+
+nav .todos h1:before {
+  background: transparent url("images/list-icon.png") 0 0 no-repeat;
+}
+
+nav .completed h1:before {
+  background: transparent url("images/completed-icon.png") 0 0 no-repeat;
+}
+
+nav .todos {
+  margin-bottom: 70px;
+}
+
+nav .todos:after {
+  display: block;
+  content: "";
+  line-height: 0;
+  clear: both;
+}
+
+nav .completed li {
+  text-decoration: line-through;
+}
+
+nav h1 {
+  font-weight: 200;
+  font-size: 1.25em;
+}
+
+nav .todos *:nth-child(odd) {
+  clear: left;
+  float: left;
+}
+
+nav .todos *:nth-child(even) {
+  float: right;
+  background-color: #6b7292;
+  border-radius: 50px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+nav .todos *:nth-child(even),
+nav li {
+  color: #a3a7bb;
+}
+
+nav li {
+  margin-top: 25px;
+}
+
+nav .selected {
+   background-color: transparent;
+   position: relative;
+   z-index: 0;
+}
+
+nav .selected + li {
+  position: relative;
+  z-index: 1;
+}
+
+.selected::before {
+   content: " ";
+   position: absolute;
+   width: 335px;
+   height: 40px;
+   top: -12px;
+   left: -135px;
+   z-index: -1;
+   background-color: #383f5f;
+}
+
+/* Main */
+
+main {
+  background-color: #fff;
+  color: #060606;
+  padding-top: 75px;
+  padding-left: 20px;
+  margin-left: 335px;
+}
+
+main h1 {
+  font-size: 1.25em;
+  display: inline-block;
+  margin-right: 18px;
+  margin-bottom: 45px;
+}
+
+main h1 + p {
+  display: inline-block;
+  position: relative;
+  bottom: 2px;
+}
+
+main p:nth-of-type(2) {
+  color: #148fd5;
+  margin-bottom: 18px;
+  padding-left: 12px;
+}
+
+main p:nth-of-type(2):before {
+  display: inline-block;
+  vertical-align: middle;
+  width: 13px;
+  height: 13px;
+  padding-right: 15px;
+  content: "";
+  background: transparent url("images/new-item-icon.png") 0 0 no-repeat;
+}
+
+main li {
+  padding: 18px 0 18px 12px;
+  border-top: 1px solid #e7e7e7;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+main li:hover {
+  color: #148fd5;
+  cursor: pointer;
+}
+
+main li:nth-of-type(odd) {
+  float: left;
+  width: 95%;
+}
+
+main li:nth-of-type(even) {
+  float: right;
+  width: 5%;
+  text-align: right;
+  padding-left: 0;
+}
+
+main li:nth-of-type(odd):before {
+  display: inline-block;
+  vertical-align: middle;
+  width: 14px;
+  height: 14px;
+  padding-right: 15px;
+  content: "";
+  background: transparent url("images/unchecked-checkbox.png") 0 0 no-repeat;
+}
+
+main ul a {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 17px;
+  content: "";
+  background: transparent url("images/trash-bin.png") 0 0 no-repeat;
+}
+
+main .checked {
+  color: #b3b3b3;
+  text-decoration: line-through;
+}
+
+main .checked:before {
+  background-image: url("images/checked-checkbox.png");
+}
