@@ -5,6 +5,7 @@ body {
   font: normal 16px Helvetica, Arial, sans-serif;
 }
 
+/* FIXME: You probably shouldn't be using !important. */
 .highlighted {
   color: #fff !important;
   background-color: #148fd5 !important;
@@ -22,9 +23,9 @@ nav {
   font-size: 0.8em;
   float: left;
   width: 335px;
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
-  padding: 75px 35px 0 135px;
+  padding: 75px 35px 75px 135px;
 }
 
 nav h1:before {
@@ -87,10 +88,13 @@ nav li {
   margin-top: 25px;
 }
 
+/* Nav Selected Element */
+
 nav .selected {
    background-color: transparent;
    position: relative;
    z-index: 0;
+   color: #fff;
 }
 
 nav .selected + li {
@@ -108,6 +112,8 @@ nav .selected + li {
    z-index: -1;
    background-color: #383f5f;
 }
+
+/* Nav Popout */
 
 input[type="checkbox"] {
   display: none;
