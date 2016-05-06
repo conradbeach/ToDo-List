@@ -109,6 +109,22 @@ nav .selected + li {
    background-color: #383f5f;
 }
 
+input[type="checkbox"] {
+  display: none;
+}
+
+input:checked ~ nav {
+  display: block;
+}
+
+input:checked ~ main {
+  margin-left: 335px;
+}
+
+input:checked ~ main label {
+  left: 355px;
+}
+
 /* Main */
 
 main {
@@ -198,4 +214,32 @@ main .checked {
 
 main .checked:before {
   background-image: url("images/checked-checkbox.png");
+}
+
+main label {
+  display: none;
+  position: absolute;
+  top: 22px;
+  left: 20px;
+}
+
+main label:hover {
+  cursor: pointer;
+}
+
+/* Media Queries */
+/* ------------- */
+
+@media screen and (max-width: 768px) {
+  nav {
+    display: none;
+  }
+
+  main {
+    margin-left: 0;
+  }
+
+  main label {
+    display: block;
+  }
 }
