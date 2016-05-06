@@ -1,17 +1,22 @@
 /* General */
 
 body {
-  max-width: 90%;
+  width: 90%;
+  max-width: 1200px;
   font: normal 16px Helvetica, Arial, sans-serif;
 }
 
-/* FIXME: You probably shouldn't be using !important. */
-.highlighted {
-  color: #fff !important;
-  background-color: #148fd5 !important;
+.circle {
+  background-color: #6b7292;
+  color:#a3a7bb;
   border-radius: 50px;
   padding-right: 5px;
   padding-left: 5px;
+}
+
+.highlighted {
+  color: #fff;
+  background-color: #148fd5;
 }
 
 /* Nav */
@@ -26,6 +31,11 @@ nav {
   min-height: 100vh;
   box-sizing: border-box;
   padding: 75px 35px 75px 135px;
+}
+
+nav h1 {
+  font-weight: 200;
+  font-size: 1.25em;
 }
 
 nav h1:before {
@@ -57,15 +67,6 @@ nav .todos:after {
   clear: both;
 }
 
-nav .completed li {
-  text-decoration: line-through;
-}
-
-nav h1 {
-  font-weight: 200;
-  font-size: 1.25em;
-}
-
 nav .todos *:nth-child(odd) {
   clear: left;
   float: left;
@@ -73,19 +74,15 @@ nav .todos *:nth-child(odd) {
 
 nav .todos *:nth-child(even) {
   float: right;
-  background-color: #6b7292;
-  border-radius: 50px;
-  padding-right: 5px;
-  padding-left: 5px;
 }
 
-nav .todos *:nth-child(even),
 nav li {
   color: #a3a7bb;
+  margin-top: 25px;
 }
 
-nav li {
-  margin-top: 25px;
+nav .completed li {
+  text-decoration: line-through;
 }
 
 /* Nav Selected Element */
@@ -113,7 +110,7 @@ nav .selected + li {
    background-color: #383f5f;
 }
 
-/* Nav Popout */
+/* Nav Toggle */
 
 input[type="checkbox"] {
   display: none;
@@ -129,6 +126,17 @@ input:checked ~ main {
 
 input:checked ~ main label {
   left: 355px;
+}
+
+main label {
+  display: none;
+  position: absolute;
+  top: 22px;
+  left: 20px;
+}
+
+main label:hover {
+  cursor: pointer;
 }
 
 /* Main */
@@ -174,7 +182,6 @@ main li {
   padding: 18px 0 18px 12px;
   border-top: 1px solid #e7e7e7;
   box-sizing: border-box;
-  overflow: visible;
 }
 
 main li:hover {
@@ -204,15 +211,6 @@ main li:nth-of-type(odd):before {
   background: transparent url("images/unchecked-checkbox.png") 0 0 no-repeat;
 }
 
-main ul a {
-  display: inline-block;
-  vertical-align: middle;
-  width: 16px;
-  height: 17px;
-  content: "";
-  background: transparent url("images/trash-bin.png") 0 0 no-repeat;
-}
-
 main .checked {
   color: #b3b3b3;
   text-decoration: line-through;
@@ -222,15 +220,13 @@ main .checked:before {
   background-image: url("images/checked-checkbox.png");
 }
 
-main label {
-  display: none;
-  position: absolute;
-  top: 22px;
-  left: 20px;
-}
-
-main label:hover {
-  cursor: pointer;
+main ul a {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 17px;
+  content: "";
+  background: transparent url("images/trash-bin.png") 0 0 no-repeat;
 }
 
 /* Modal */
@@ -272,6 +268,7 @@ aside:before {
 .modal textarea {
   font-size: 1em;
   border: 1px solid #b3b3b3;
+  width: 400px;
   padding-left: 5px;
 }
 
@@ -283,20 +280,18 @@ aside:before {
 }
 
 .modal input {
-  width: 400px;
   height: 35px;
-}
-.modal textarea {
-  font: normal 16px Helvetica, Arial, sans-serif; /* for Firefox */
-  resize: none;
-  width: 400px;
-  height: 140px;
-  padding-top: 8px;
 }
 
 .modal input[type="number"] {
   width: 120px;
-  height: 35px;
+}
+
+.modal textarea {
+  font: normal 16px Helvetica, Arial, sans-serif;
+  resize: none;
+  height: 140px;
+  padding-top: 8px;
 }
 
 .modal .button {
@@ -307,14 +302,13 @@ aside:before {
   border-radius: 5px;
 }
 
-/* FIXME: Not a good selector choice. */
+/* FIXME: Probably not a good selector choice. */
 .modal input:nth-child(9) {
   margin-left: 120px;
   margin-right: 20px;
 }
 
 /* Media Queries */
-/* ------------- */
 
 @media screen and (max-width: 768px) {
   nav {
