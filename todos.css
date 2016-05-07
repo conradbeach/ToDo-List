@@ -323,3 +323,22 @@ aside:before {
     display: block;
   }
 }
+
+@media screen and (max-width: 555px) {
+  nav {
+    width: 235px;
+    padding-left: 45px;
+  }
+
+  input:checked ~ main {
+    margin-left: 235px;
+  }
+
+  input:checked ~ main label {
+    left: 255px;
+  }
+
+  .selected:before {
+    width: 325px;
+  }
+}
