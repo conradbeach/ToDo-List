@@ -45,27 +45,12 @@
 
       <h1>02/16</h1>
       <p class="circle highlighted">8</p>
-      <p>Add new to do</p>
+      <a href="#">Add new to do</a>
 
       <ul>
-        <li>Item 1</li>
-        <li><a href="#"></a></li>
-        <li>Item 2</li>
-        <li><a href="#"></a></li>
-        <li class="checked">Item 3</li>
-        <li><a href="#"></a></li>
-        <li class="checked">Item 4</li>
-        <li><a href="#"></a></li>
-        <li class="checked">Item 5</li>
-        <li><a href="#"></a></li>
-        <li>Item 6</li>
-        <li><a href="#"></a></li>
-        <li>Item 7</li>
-        <li><a href="#"></a></li>
-        <li>Item 8</li>
-        <li><a href="#"></a></li>
-        <li>Item 9</li>
-        <li><a href="#"></a></li>
+        <!-- <li>Item 1: Description<a href="#"></a></li>
+        <li>Item 2<a href="#"></a></li>
+        <li class="checked">Item 3: Description<a href="#"></a></li> -->
       </ul>
     </main>
 
@@ -74,9 +59,9 @@
         <label for="title">Title</label>
         <input type="text" name="title" placeholder="Title">
         <label for="day">Due Date</label>
-        <input type="number" name="day" placeholder="Day"> /
-        <input type="number" name="month" placeholder="Month"> /
-        <input type="number" name="year" placeholder="Year">
+        <input type="number" name="month" placeholder="Month" min="1" max="12"> /
+        <input type="number" name="day" placeholder="Day" min="1" max="31"> /
+        <input type="number" name="year" placeholder="Year" min="1" max="9999">
         <label for="description">Description</label>
         <textarea name="description" rows="8" cols="40" placeholder="Description"></textarea>
         <input type="submit" name="save" value="Save" class="button">
@@ -84,4 +69,7 @@
       </form>
     </aside>
   </body>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="javascripts/todos.js"></script>
 </html>

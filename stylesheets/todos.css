@@ -49,11 +49,11 @@ nav h1:before {
 }
 
 nav .todos h1:before {
-  background: transparent url("images/list-icon.png") 0 0 no-repeat;
+  background: transparent url("../images/list-icon.png") 0 0 no-repeat;
 }
 
 nav .completed h1:before {
-  background: transparent url("images/completed-icon.png") 0 0 no-repeat;
+  background: transparent url("../images/completed-icon.png") 0 0 no-repeat;
 }
 
 nav .todos {
@@ -162,20 +162,22 @@ main h1 + p {
   bottom: 2px;
 }
 
-main p:nth-of-type(2) {
+main > a {
   color: #148fd5;
+  text-decoration: none;
+  display: block;
   margin-bottom: 18px;
   padding-left: 12px;
 }
 
-main p:nth-of-type(2):before {
+main > a:before {
   display: inline-block;
   vertical-align: middle;
   width: 13px;
   height: 13px;
   padding-right: 15px;
   content: "";
-  background: transparent url("images/new-item-icon.png") 0 0 no-repeat;
+  background: transparent url("../images/new-item-icon.png") 0 0 no-repeat;
 }
 
 main li {
@@ -187,28 +189,26 @@ main li {
 main li:hover {
   color: #148fd5;
   cursor: pointer;
+  width: 100%;
 }
 
-main li:nth-of-type(odd) {
-  float: left;
-  width: 95%;
+main li time {
+  margin-left: 50px;
+  color: #b3b3b3;
 }
 
-main li:nth-of-type(even) {
+main li a {
   float: right;
-  width: 5%;
-  text-align: right;
-  padding-left: 0;
 }
 
-main li:nth-of-type(odd):before {
+main li:before {
   display: inline-block;
   vertical-align: middle;
   width: 14px;
   height: 14px;
   padding-right: 15px;
   content: "";
-  background: transparent url("images/unchecked-checkbox.png") 0 0 no-repeat;
+  background: transparent url("../images/unchecked-checkbox.png") 0 0 no-repeat;
 }
 
 main .checked {
@@ -216,8 +216,8 @@ main .checked {
   text-decoration: line-through;
 }
 
-main .checked:before {
-  background-image: url("images/checked-checkbox.png");
+main li.checked:before {
+  background: transparent url("../images/checked-checkbox.png") 0 0 no-repeat;
 }
 
 main ul a {
@@ -226,7 +226,7 @@ main ul a {
   width: 16px;
   height: 17px;
   content: "";
-  background: transparent url("images/trash-bin.png") 0 0 no-repeat;
+  background: transparent url("../images/trash-bin.png") 0 0 no-repeat;
 }
 
 /* Modal */
