@@ -211,12 +211,12 @@ main li:before {
   background: transparent url("../images/unchecked-checkbox.png") 0 0 no-repeat;
 }
 
-main .checked {
+main .complete {
   color: #b3b3b3;
   text-decoration: line-through;
 }
 
-main li.checked:before {
+main li.complete:before {
   background: transparent url("../images/checked-checkbox.png") 0 0 no-repeat;
 }
 
