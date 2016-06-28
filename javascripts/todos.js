@@ -8,7 +8,7 @@ $(function() {
       };
 
       this.loadTodos();
-      this.filterTodos();
+      this.updateView(true);
       this.setHandlers();
     },
 
@@ -18,28 +18,34 @@ $(function() {
       var self = this;
 
       // TODO: There's a fair bit of code duplication in the next 4 event handlers.
-      $("nav section.todos h1").on("click", function () {
+      $("nav .todos h1").on("click", function (event) {
         self.updateFilter(0, 0, "false");
-        self.filterTodos();
+        self.updateView(false);
       });
 
-      $("nav section.completed h1").on("click", function() {
+      $("nav .completed h1").on("click", function() {
         self.updateFilter(0, 0, "true");
-        self.filterTodos();
+        self.updateView(false);
       });
 
-      $("nav section.todos li").on("click", function(event) {
-        var date = self.parseNavDate(event.currentTarget);
+      $("nav .todos").on("click", "li", function(event) {
+        var date = self.parseNavDate(event.target);
 
         self.updateFilter(date.month, date.year, "false");
-        self.filterTodos();
+        self.updateView(false);
+
+        $("nav li").removeClass();
+        $(event.target).addClass("selected");
       });
 
-      $("nav section.completed li").on("click", function() {
-        var date = self.parseNavDate(event.currentTarget);
+      $("nav .completed").on("click", "li", function(event) {
+        var date = self.parseNavDate(event.target);
 
         self.updateFilter(date.month, date.year, "true");
-        self.filterTodos();
+        self.updateView(false);
+
+        $("nav li").removeClass();
+        $(event.target).addClass("selected");
       });
 
       $("main > a").on("click", function(event) {
@@ -76,28 +82,9 @@ $(function() {
         var index = self.getFormTodoIndex();
 
         if (index) {
-          var todo = self.current_todos[index];
-
-          todo.title = $("input[name='title']").val();
-          todo.month = +$("input[name='month']").val();
-          todo.day = +$("input[name='day']").val();
-          todo.year = +$("input[name='year']").val();
-          todo.desc = $("textarea").val();
-
-          todo_html = self.constructInnerTodoHTML(todo);
-          $("main ul li").eq(index).html(todo_html);
+          self.updateTodo(index);
         } else {
-          var new_todo = {};
-
-          new_todo.title = $("input[name='title']").val();
-          new_todo.month = +$("input[name='month']").val();
-          new_todo.day = +$("input[name='day']").val();
-          new_todo.year = +$("input[name='year']").val();
-          new_todo.desc = $("textarea").val();
-          new_todo.complete = false;
-
-          self.todos.push(new_todo);
-          self.showTodo(new_todo); // TODO: This is going to show a new todo even if it doesn't belong in the category currently being viewed. Switch this out for a filterTodos() call.
+          self.createTodo();
         }
 
         self.toggleTaskPane();
@@ -120,7 +107,6 @@ $(function() {
 
     loadTodos: function() {
       this.todos = JSON.parse(localStorage.getItem("todos")) || [];
-      this.filterTodos(0, 0, "false");
     },
 
     saveTodos: function() {
@@ -135,7 +121,73 @@ $(function() {
       };
     },
 
-    filterTodos: function() {
+    showTodo: function(todo) {
+      todo_html = this.constructTodoHTML(todo);
+
+      $("main ul").append(todo_html);
+    },
+
+    createTodo: function() {
+      var new_todo = {};
+
+      new_todo.title = $("input[name='title']").val();
+      new_todo.month = +$("input[name='month']").val();
+      new_todo.day = +$("input[name='day']").val();
+      new_todo.year = +$("input[name='year']").val();
+      new_todo.desc = $("textarea").val();
+      new_todo.complete = false;
+
+      this.todos.push(new_todo);
+      this.updateView(true);
+    },
+
+    updateTodo: function(index) {
+      var todo = this.current_todos[index];
+
+      todo.title = $("input[name='title']").val();
+      todo.month = +$("input[name='month']").val();
+      todo.day = +$("input[name='day']").val();
+      todo.year = +$("input[name='year']").val();
+      todo.desc = $("textarea").val();
+
+      todo_html = this.constructInnerTodoHTML(todo);
+      $("main ul li").eq(index).html(todo_html);
+    },
+
+    // TODO: Add ability to mark an item as uncomplete.
+    // TODO: Add ability to click on check mark next to item to toggle completion.
+    markComplete: function(index) {
+      var $todo_li = $("main ul li").eq(index),
+          todo;
+
+      this.current_todos[index].complete = true;
+
+      $todo_li.addClass("complete");
+      $todo_li.remove().appendTo($("main ul"));
+
+      this.filterTodos();
+      this.updateNav();
+
+      this.toggleTaskPane();
+    },
+
+    deleteTodo: function(index) {
+      var deleted_todo = this.current_todos.splice(index, 1)[0];
+      this.todos = this.todos.filter(function(element) { return element !== deleted_todo; });
+
+      this.updateNav();
+
+      $("main ul li").eq(index).remove();
+    },
+
+    updateView: function(updateNav) {
+      if (updateNav) { this.updateNav(); }
+      this.updateTodos();
+      this.updateCounts();
+      this.updateHeader();
+    },
+
+    updateTodos: function() {
       var self = this;
 
       this.current_todos = [];
@@ -165,30 +217,121 @@ $(function() {
       });
     },
 
+    // TODO: Refactor this so you're not reconstructing the entire nav each time.
+    updateNav: function() {
+      var due_dates = this.getDueDates(),
+          $todo_ul = $("nav section.todos ul"),
+          $complete_ul = $("nav section.completed ul");
+
+      $todo_ul.empty();
+      $complete_ul.empty();
+
+      Object.keys(due_dates.incomplete).forEach(function(date) {
+        var html = "<li>" + date + "<span class='circle'>" + due_dates.incomplete[date] + "</span></li>";
+
+        $todo_ul.append(html);
+      });
+
+      Object.keys(due_dates.complete).forEach(function(date) {
+        var html = "<li>" + date + "</li>";
+
+        $complete_ul.append(html);
+      });
+    },
+
+    updateCounts: function() {
+      // TODO: When a todo is added, deleted or marked as complete. Update the counters next the various lists.
+      var due_dates = this.getDueDates(),
+          incomplete_todos_count = 0;
+
+      Object.keys(due_dates.incomplete).forEach(function(date) {
+        incomplete_todos_count += due_dates.incomplete[date];
+      });
+
+      $("nav .todos p").text(incomplete_todos_count);
+
+      $("main p").text(this.current_todos.length);
+    },
+
+    updateHeader: function() {
+      if (!this.current_filter.month && !this.current_filter.year && this.current_filter.complete === "false") {
+        $("main h1").text("All Todos");
+      } else if (!this.current_filter.month && !this.current_filter.year && this.current_filter.complete === "true") {
+        $("main h1").text("Completed");
+      } else {
+        $("main h1").text(this.current_filter.month + "/" + this.current_filter.year);
+      }
+    },
+
+    toggleTaskPane: function() {
+      var $task_pane = $("aside");
+
+      if ($task_pane.hasClass("hidden")) {
+        $task_pane.removeClass();
+      } else {
+        $task_pane.addClass("hidden");
+        $task_pane.children("form")[0].reset();
+        $task_pane.removeAttr("data-index");
+      }
+    },
+
     // Returns an object with month and year properties. e.g. { month: 1, year: 2016 };
     parseNavDate: function(element) {
       var split_text,
           month,
           year;
 
-      split_text = $(element).text().split(/\//);
+      split_text = $(element).html().split(/<span/)[0].split(/\//);
       month = +split_text[0];
       year = +split_text[1];
 
       return { month: month, year: year };
     },
 
-    showTodo: function(todo) {
-      todo_html = this.constructTodoHTML(todo);
+    // TODO: Order due dates.
+    // Returns an object with complete and incomplete properties that both contain a list of due dates.
+    getDueDates: function() {
+      var due_dates = {
+        complete: {},
+        incomplete: {}
+      };
 
-      $("main ul").append(todo_html);
+      function keepDate(list, date) {
+        if (!date.month || !date.year) { return false; }
+
+        var uniq = true;
+
+        list.forEach(function(list_date) {
+          if (_.isEqual(list_date, date)) { uniq = false; }
+        });
+
+        return uniq;
+      }
+
+      for (var i = 0; i < this.todos.length; i++ ) {
+        var todo = this.todos[i];
+
+        if (!todo.month || !todo.year) { continue; }
+
+        var date = todo.month + "/" + todo.year;
+
+        if (todo.complete) {
+          if (due_dates.complete[date]) {
+            due_dates.complete[date] += 1;
+          } else {
+            due_dates.complete[date] = 1;
+          }
+        } else {
+          if (due_dates.incomplete[date]) {
+            due_dates.incomplete[date] += 1;
+          } else {
+            due_dates.incomplete[date] = 1;
+          }
+        }
+      }
+
+      return due_dates;
     },
-
-    updateCounts: function() {
-      // TODO: When a todo is added, deleted or marked as complete. Update the counters next the various lists.
-    },
-
-    
 
     constructTodoHTML: function(todo) {
       var todo_html = "<li";
@@ -216,41 +359,6 @@ $(function() {
       var html = this.constructTodoHTML(todo);
 
       return html.replace(/<li>/, "").replace(/<\/li>/, "");
-    },
-
-    // TODO: Add ability to mark an item as uncomplete.
-    // TODO: Add ability to click on check mark next to item to toggle completion.
-    markComplete: function(index) {
-      var $todo_li = $("main ul li").eq(index),
-          todo;
-
-      this.current_todos[index].complete = true;
-
-      $todo_li.addClass("complete");
-      $todo_li.remove().appendTo($("main ul"));
-
-      // TODO: Update visible todos.
-
-      this.toggleTaskPane();
-    },
-
-    deleteTodo: function(index) {
-      var deleted_todo = this.current_todos.splice(index, 1)[0];
-      this.todos = this.todos.filter(function(element) { return element !== deleted_todo; });
-
-      $("main ul li").eq(index).remove();
-    },
-
-    toggleTaskPane: function() {
-      var $task_pane = $("aside");
-
-      if ($task_pane.hasClass("hidden")) {
-        $task_pane.removeClass();
-      } else {
-        $task_pane.addClass("hidden");
-        $task_pane.children("form")[0].reset();
-        $task_pane.removeAttr("data-index");
-      }
     },
 
     getFormTodoIndex: function() {
