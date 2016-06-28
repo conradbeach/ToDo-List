@@ -38,6 +38,11 @@ nav h1 {
   font-size: 1.25em;
 }
 
+nav h1:hover,
+nav li:hover {
+  cursor: pointer;
+}
+
 nav h1:before {
   display: inline-block;
   vertical-align: middle;
