@@ -65,6 +65,14 @@ nav .todos {
   margin-bottom: 70px;
 }
 
+nav .todos h1 {
+  float: left;
+}
+
+nav .todos p {
+  float: right;
+}
+
 nav .todos:after {
   display: block;
   content: "";
@@ -72,12 +80,13 @@ nav .todos:after {
   clear: both;
 }
 
-nav .todos *:nth-child(odd) {
+nav .todos li {
   clear: left;
   float: left;
+  width: 100%;
 }
 
-nav .todos *:nth-child(even) {
+nav .todos span {
   float: right;
 }
 
@@ -97,11 +106,6 @@ nav .selected {
    position: relative;
    z-index: 0;
    color: #fff;
-}
-
-nav .selected + li {
-  position: relative;
-  z-index: 1;
 }
 
 .selected::before {

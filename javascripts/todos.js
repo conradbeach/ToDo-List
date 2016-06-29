@@ -1,3 +1,7 @@
+// MAJOR TODOS:
+// TODO: Sort due dates in nav.
+// TODO: Get selection CSS working. Headers need to be selected as well. Selection gets removed when you add a new todo.
+
 $(function() {
   var todo = {
     init: function() {
@@ -34,8 +38,10 @@ $(function() {
         self.updateFilter(date.month, date.year, "false");
         self.updateView(false);
 
-        $("nav li").removeClass();
+        $("nav li").removeClass("selected");
+        $("nav li span").removeClass("highlighted");
         $(event.target).addClass("selected");
+        $(event.target).children("span").addClass("highlighted");
       });
 
       $("nav .completed").on("click", "li", function(event) {
@@ -44,7 +50,8 @@ $(function() {
         self.updateFilter(date.month, date.year, "true");
         self.updateView(false);
 
-        $("nav li").removeClass();
+        $("nav li").removeClass("selected");
+        $("nav li span").removeClass("highlighted");
         $(event.target).addClass("selected");
       });
 
@@ -163,10 +170,8 @@ $(function() {
       this.current_todos[index].complete = true;
 
       $todo_li.addClass("complete");
-      $todo_li.remove().appendTo($("main ul"));
 
-      this.filterTodos();
-      this.updateNav();
+      this.updateView(true);
 
       this.toggleTaskPane();
     },
@@ -175,9 +180,7 @@ $(function() {
       var deleted_todo = this.current_todos.splice(index, 1)[0];
       this.todos = this.todos.filter(function(element) { return element !== deleted_todo; });
 
-      this.updateNav();
-
-      $("main ul li").eq(index).remove();
+      this.updateView(true);
     },
 
     updateView: function(updateNav) {
@@ -240,12 +243,13 @@ $(function() {
     },
 
     updateCounts: function() {
-      // TODO: When a todo is added, deleted or marked as complete. Update the counters next the various lists.
       var due_dates = this.getDueDates(),
           incomplete_todos_count = 0;
 
-      Object.keys(due_dates.incomplete).forEach(function(date) {
-        incomplete_todos_count += due_dates.incomplete[date];
+      this.todos.forEach(function(todo) {
+        if (!todo.complete) {
+          incomplete_todos_count += 1;
+        }
       });
 
       $("nav .todos p").text(incomplete_todos_count);
