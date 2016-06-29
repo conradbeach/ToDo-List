@@ -13,8 +13,7 @@
     <nav>
       <section class="todos">
         <!-- classes are 'selected' and 'highlighted' -->
-        <h1>All Todos</h1>
-        <p class="circle">0</p>
+        <h1>All Todos<span class="circle">0</span></h1>
         <ul></ul>
       </section>
 
@@ -39,6 +38,7 @@
         <label for="title">Title</label>
         <input type="text" name="title" placeholder="Title">
         <label for="day">Due Date</label>
+        <!-- FIXME: The below min and max validations aren't working. -->
         <input type="number" name="month" placeholder="Month" min="1" max="12"> /
         <input type="number" name="day" placeholder="Day" min="1" max="31"> /
         <input type="number" name="year" placeholder="Year" min="1" max="9999">

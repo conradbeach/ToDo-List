@@ -1,7 +1,3 @@
-// MAJOR TODOS:
-// TODO: Sort due dates in nav.
-// TODO: Get selection CSS working. Headers need to be selected as well. Selection gets removed when you add a new todo.
-
 $(function() {
   var todo = {
     init: function() {
@@ -21,43 +17,23 @@ $(function() {
 
       var self = this;
 
-      // TODO: There's a fair bit of code duplication in the next 4 event handlers.
-      $("nav .todos h1").on("click", function (event) {
-        self.updateFilter(0, 0, "false");
-        self.updateView(false);
-      });
-
-      $("nav .completed h1").on("click", function() {
-        self.updateFilter(0, 0, "true");
-        self.updateView(false);
-      });
-
-      $("nav .todos").on("click", "li", function(event) {
+      function navEvent(event, complete) {
         var date = self.parseNavDate(event.target);
 
-        self.updateFilter(date.month, date.year, "false");
+        self.updateFilter(date.month, date.year, String(complete));
         self.updateView(false);
+      }
 
-        $("nav li").removeClass("selected");
-        $("nav li span").removeClass("highlighted");
-        $(event.target).addClass("selected");
-        $(event.target).children("span").addClass("highlighted");
+      $("nav .todos").on("click", "li", function(event) {
+        navEvent(event, false);
       });
 
       $("nav .completed").on("click", "li", function(event) {
-        var date = self.parseNavDate(event.target);
-
-        self.updateFilter(date.month, date.year, "true");
-        self.updateView(false);
-
-        $("nav li").removeClass("selected");
-        $("nav li span").removeClass("highlighted");
-        $(event.target).addClass("selected");
+        navEvent(event, true);
       });
 
       $("main > a").on("click", function(event) {
         event.preventDefault();
-
         self.toggleTaskPane();
       });
 
@@ -68,6 +44,7 @@ $(function() {
         self.deleteTodo(index);
       });
 
+      // TODO: Refactor this.
       $("main ul").on("click", "span", function(event) {
         var index = $("main ul li").index($(event.currentTarget).parent()),
             todo = self.current_todos[index];
@@ -184,10 +161,15 @@ $(function() {
     },
 
     updateView: function(updateNav) {
-      if (updateNav) { this.updateNav(); }
+      if (updateNav) {
+        this.updateNav();
+        this.orderNav();
+      }
+
       this.updateTodos();
       this.updateCounts();
       this.updateHeader();
+      this.updateSelectedNav();
     },
 
     updateTodos: function() {
@@ -198,24 +180,9 @@ $(function() {
       $("main ul").empty();
 
       this.todos.forEach(function(todo) {
-        if (!self.current_filter.month && !self.current_filter.year && !self.current_filter.complete) {
+        if (todo.month === self.current_filter.month && todo.year === self.current_filter.year && String(todo.complete) === self.current_filter.complete) {
           self.showTodo(todo);
           self.current_todos.push(todo);
-        } else if (!self.current_filter.month && !self.current_filter.year) {
-          if (String(todo.complete) === self.current_filter.complete) {
-            self.showTodo(todo);
-            self.current_todos.push(todo);
-          }
-        } else if (!self.current_filter.complete) {
-          if (todo.month === self.current_filter.month && todo.year === self.current_filter.year) {
-            self.showTodo(todo);
-            self.current_todos.push(todo);
-          }
-        } else {
-          if (todo.month === self.current_filter.month && todo.year === self.current_filter.year && String(todo.complete) === self.current_filter.complete) {
-            self.showTodo(todo);
-            self.current_todos.push(todo);
-          }
         }
       });
     },
@@ -230,16 +197,59 @@ $(function() {
       $complete_ul.empty();
 
       Object.keys(due_dates.incomplete).forEach(function(date) {
-        var html = "<li>" + date + "<span class='circle'>" + due_dates.incomplete[date] + "</span></li>";
+        var html,
+            count = due_dates.incomplete[date];
+
+        if (date === "0/0") {
+          date = "No Due Date";
+        }
+
+        html = "<li>" + date + "<span class='circle'>" + count + "</span></li>";
 
         $todo_ul.append(html);
       });
 
       Object.keys(due_dates.complete).forEach(function(date) {
-        var html = "<li>" + date + "</li>";
+        var html;
+
+        if (date === "0/0") {
+          date = "No Due Date";
+        }
+
+        html = "<li>" + date + "</li>";
 
         $complete_ul.append(html);
       });
+    },
+
+    orderNav: function() {
+      var self = this;
+
+      function order(selector) {
+        elements = $(selector).children("li").toArray();
+
+        elements.sort(function(a, b) {
+          var a_date = self.parseNavDate(a),
+              b_date = self.parseNavDate(b);
+
+          if (a_date.year > b_date.year) {
+            return 1;
+          } else if (a_date.year < b_date.year) {
+            return -1;
+          } else if (a_date.month > b_date.month) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+
+        elements.forEach(function(element) {
+          $(element).detach().appendTo($(selector));
+        });
+      }
+
+      order("nav .todos ul");
+      order("nav .completed ul");
     },
 
     updateCounts: function() {
@@ -252,18 +262,40 @@ $(function() {
         }
       });
 
-      $("nav .todos p").text(incomplete_todos_count);
+      $("nav .todos h1 span").text(incomplete_todos_count);
 
       $("main p").text(this.current_todos.length);
     },
 
     updateHeader: function() {
-      if (!this.current_filter.month && !this.current_filter.year && this.current_filter.complete === "false") {
-        $("main h1").text("All Todos");
-      } else if (!this.current_filter.month && !this.current_filter.year && this.current_filter.complete === "true") {
-        $("main h1").text("Completed");
+      var $main_header = $("main h1");
+
+      if (this.current_filter.month === 0 && this.current_filter.year === 0) {
+        $main_header.text("No Due Date");
       } else {
-        $("main h1").text(this.current_filter.month + "/" + this.current_filter.year);
+        $main_header.text(this.current_filter.month + "/" + this.current_filter.year);
+      }
+    },
+
+    updateSelectedNav: function() {
+      var self = this;
+
+      function selectNav(selector) {
+        $selected_li = $(selector).filter(function() {
+          date = self.parseNavDate(this);
+
+          return date.month === self.current_filter.month && date.year === self.current_filter.year;
+        });
+
+        $selected_li.addClass("selected").children("span").addClass("highlighted");
+      }
+
+      $("nav li").removeClass("selected").children("span").removeClass("highlighted");
+
+      if (this.current_filter.complete === "false") {
+        selectNav("nav .todos li");
+      } else {
+        selectNav("nav .completed li");
       }
     },
 
@@ -285,6 +317,10 @@ $(function() {
           month,
           year;
 
+      if ($(element).html().split(/<span/)[0] === "No Due Date") {
+        return { month: 0, year: 0 };
+      }
+
       split_text = $(element).html().split(/<span/)[0].split(/\//);
       month = +split_text[0];
       year = +split_text[1];
@@ -292,7 +328,6 @@ $(function() {
       return { month: month, year: year };
     },
 
-    // TODO: Order due dates.
     // Returns an object with complete and incomplete properties that both contain a list of due dates.
     getDueDates: function() {
       var due_dates = {
@@ -300,23 +335,7 @@ $(function() {
         incomplete: {}
       };
 
-      function keepDate(list, date) {
-        if (!date.month || !date.year) { return false; }
-
-        var uniq = true;
-
-        list.forEach(function(list_date) {
-          if (_.isEqual(list_date, date)) { uniq = false; }
-        });
-
-        return uniq;
-      }
-
-      for (var i = 0; i < this.todos.length; i++ ) {
-        var todo = this.todos[i];
-
-        if (!todo.month || !todo.year) { continue; }
-
+      this.todos.forEach(function(todo) {
         var date = todo.month + "/" + todo.year;
 
         if (todo.complete) {
@@ -332,7 +351,7 @@ $(function() {
             due_dates.incomplete[date] = 1;
           }
         }
-      }
+      });
 
       return due_dates;
     },
