@@ -4,30 +4,30 @@ $(function() {
       this.current_filter = {
         month: 0,
         year: 0,
-        complete: "false"
+        complete: false
       };
 
       this.loadTodos();
-      this.updateView(true);
+      this.updateView();
       this.setHandlers();
     },
 
     setHandlers: function() {
       var self = this;
 
-      function navEvent(event, complete) {
+      function navChange(event, complete) {
         var date = self.parseNavDate(event.target);
 
-        self.updateFilter(date.month, date.year, String(complete));
-        self.updateView(false);
+        self.updateFilter(date.month, date.year, complete);
+        self.updateView();
       }
 
       $("nav .todos").on("click", "li", function(event) {
-        navEvent(event, false);
+        navChange(event, false);
       });
 
       $("nav .completed").on("click", "li", function(event) {
-        navEvent(event, true);
+        navChange(event, true);
       });
 
       $("main > a").on("click", function(event) {
@@ -42,20 +42,10 @@ $(function() {
         self.deleteTodo(index);
       });
 
-      // TODO: Refactor this.
       $("main ul").on("click", "span", function(event) {
-        var index = $("main ul li").index($(event.currentTarget).parent()),
-            todo = self.current_todos[index];
+        var index = $("main ul li").index($(event.currentTarget).parent());
 
-        self.toggleTaskPane();
-        $("input[name='title']").val(todo.title);
-        $("input[name='month']").val(todo.month || "");
-        $("input[name='day']").val(todo.day || "");
-        $("input[name='year']").val(todo.year || "");
-        $("textarea").val(todo.desc);
-
-        $("aside").addClass("edit");
-        $("aside").attr("data-index", index);
+        self.editTodo(index);
       });
 
       $("form [name='save']").on("click", function(event) {
@@ -110,7 +100,7 @@ $(function() {
     },
 
     showTodo: function(todo) {
-      todo_html = this.constructTodoHTML(todo);
+      var todo_html = this.constructTodoHTML(todo);
 
       $("main ul").append(todo_html);
     },
@@ -126,7 +116,22 @@ $(function() {
       new_todo.complete = false;
 
       this.todos.push(new_todo);
-      this.updateView(true);
+      this.updateView();
+    },
+
+    editTodo: function(index) {
+      var todo = this.current_todos[index];
+
+      this.toggleTaskPane();
+
+      $("input[name='title']").val(todo.title);
+      $("input[name='month']").val(todo.month || "");
+      $("input[name='day']").val(todo.day || "");
+      $("input[name='year']").val(todo.year || "");
+      $("textarea").val(todo.desc);
+
+      $("aside").addClass("edit");
+      $("aside").attr("data-index", index);
     },
 
     updateTodo: function(index) {
@@ -138,57 +143,32 @@ $(function() {
       todo.year = +$("input[name='year']").val();
       todo.desc = $("textarea").val();
 
-      todo_html = this.constructInnerTodoHTML(todo);
-      $("main ul li").eq(index).html(todo_html);
+      this.updateView();
     },
 
     // TODO: Add ability to mark an item as incomplete.
     // TODO: Add ability to click on check mark next to item to toggle completion.
     markComplete: function(index) {
-      var $todo_li = $("main ul li").eq(index),
-          todo;
-
       this.current_todos[index].complete = true;
 
-      $todo_li.addClass("complete");
-
-      this.updateView(true);
-
       this.toggleTaskPane();
+      this.updateView();
     },
 
     deleteTodo: function(index) {
       var deleted_todo = this.current_todos.splice(index, 1)[0];
       this.todos = this.todos.filter(function(element) { return element !== deleted_todo; });
 
-      this.updateView(true);
+      this.updateView();
     },
 
-    updateView: function(updateNav) {
-      if (updateNav) {
-        this.updateNav();
-        this.orderNav();
-      }
-
+    updateView: function() {
+      this.updateNav();
+      this.orderNav();
       this.updateTodos();
       this.updateCounts();
       this.updateHeader();
       this.updateSelectedNav();
-    },
-
-    updateTodos: function() {
-      var self = this;
-
-      this.current_todos = [];
-
-      $("main ul").empty();
-
-      this.todos.forEach(function(todo) {
-        if (todo.month === self.current_filter.month && todo.year === self.current_filter.year && String(todo.complete) === self.current_filter.complete) {
-          self.showTodo(todo);
-          self.current_todos.push(todo);
-        }
-      });
     },
 
     updateNav: function() {
@@ -255,9 +235,22 @@ $(function() {
       order("nav .completed ul");
     },
 
+    updateTodos: function() {
+      var self = this;
+
+      this.current_todos = [];
+      $("main ul").empty();
+
+      this.todos.forEach(function(todo) {
+        if (todo.month === self.current_filter.month && todo.year === self.current_filter.year && todo.complete === self.current_filter.complete) {
+          self.showTodo(todo);
+          self.current_todos.push(todo);
+        }
+      });
+    },
+
     updateCounts: function() {
-      var due_dates = this.getDueDates(),
-          incomplete_todos_count = 0;
+      var incomplete_todos_count = 0;
 
       this.todos.forEach(function(todo) {
         if (!todo.complete) {
@@ -266,7 +259,6 @@ $(function() {
       });
 
       $("nav .todos h1 span").text(incomplete_todos_count);
-
       $("main p").text(this.current_todos.length);
     },
 
@@ -295,7 +287,7 @@ $(function() {
 
       $("nav li").removeClass("selected").children("span").removeClass("highlighted");
 
-      if (this.current_filter.complete === "false") {
+      if (!this.current_filter.complete) {
         selectNav("nav .todos li");
       } else {
         selectNav("nav .completed li");
@@ -320,11 +312,13 @@ $(function() {
           month,
           year;
 
-      if ($(element).html().split(/<span/)[0] === "No Due Date") {
+      split_text = $(element).html().split(/<span/)[0];
+
+      if (split_text === "No Due Date") {
         return { month: 0, year: 0 };
       }
 
-      split_text = $(element).html().split(/<span/)[0].split(/\//);
+      split_text = split_text.split(/\//);
       month = +split_text[0];
       year = +split_text[1];
 
@@ -372,19 +366,15 @@ $(function() {
         todo_html += ": " + todo.desc;
       }
 
-      if (todo.day && todo.month && todo.year) {
+      if (todo.month && todo.day && todo.year) {
         todo_html += "<time>" + todo.month + "/" + todo.day + "/" + todo.year + "</time>";
+      } else if (todo.month && todo.year) {
+        todo_html += "<time>" + todo.month + "/" + todo.year + "</time>";
       }
 
       todo_html += "</span><a href='#'></a></li>";
 
       return todo_html;
-    },
-
-    constructInnerTodoHTML: function(todo) {
-      var html = this.constructTodoHTML(todo);
-
-      return html.replace(/<li>/, "").replace(/<\/li>/, "");
     },
 
     getFormTodoIndex: function() {
