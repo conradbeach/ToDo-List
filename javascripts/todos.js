@@ -13,8 +13,6 @@ $(function() {
     },
 
     setHandlers: function() {
-      // TODO: Add ability to click outside of modal to dismiss it.
-
       var self = this;
 
       function navEvent(event, complete) {
@@ -84,6 +82,12 @@ $(function() {
         }
       });
 
+      $("aside").on('click', function(event) {
+        if (event.target === this) {
+          self.toggleTaskPane();
+        }
+      });
+
       $(window).on("unload", function(event) {
         self.saveTodos();
       });
@@ -138,7 +142,7 @@ $(function() {
       $("main ul li").eq(index).html(todo_html);
     },
 
-    // TODO: Add ability to mark an item as uncomplete.
+    // TODO: Add ability to mark an item as incomplete.
     // TODO: Add ability to click on check mark next to item to toggle completion.
     markComplete: function(index) {
       var $todo_li = $("main ul li").eq(index),
@@ -187,7 +191,6 @@ $(function() {
       });
     },
 
-    // TODO: Refactor this so you're not reconstructing the entire nav each time.
     updateNav: function() {
       var due_dates = this.getDueDates(),
           $todo_ul = $("nav section.todos ul"),

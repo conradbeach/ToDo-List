@@ -319,6 +319,12 @@ aside:before {
 
 /* Media Queries */
 
+@media screen and (max-width: 1080px) {
+  .modal {
+    left: 220px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   nav {
     display: none;
@@ -330,6 +336,10 @@ aside:before {
 
   main label {
     display: block;
+  }
+
+  .modal {
+    left: 50px;
   }
 }
 
