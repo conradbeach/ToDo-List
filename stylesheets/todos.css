@@ -198,7 +198,6 @@ main li {
 main li:hover {
   color: #148fd5;
   cursor: pointer;
-  width: 100%;
 }
 
 main li time {
