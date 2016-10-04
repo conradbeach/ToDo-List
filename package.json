@@ -1,0 +1,13 @@
+{
+  "name": "todo_app",
+  "author": "Conrad Beach",
+  "devDependencies": {
+    "bower": "^1.7.9",
+    "grunt": "^1.0.1",
+    "grunt-bower-concat": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-handlebars": "^1.0.0",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0"
+  }
+}

@@ -1,0 +1,11 @@
+extends: airbnb/legacy
+installedESLint: true
+plugins:
+  - import
+
+rules:
+  no-trailing-spaces: 0
+  no-undef: 0
+  func-names: 0
+  no-unused-vars: 0
+  space-before-function-paren: 0
