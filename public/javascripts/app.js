@@ -3,12 +3,14 @@ app = {
 };
 
 Handlebars.registerHelper('formatDate', function(date) {
+  var dateObj = new Date(date);
+
   var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
                 'August', 'September', 'October', 'November', 'December'];
 
-  var year = date.getFullYear();
-  var month = months[date.getMonth()];
-  var day = date.getDate();
+  var year = dateObj.getFullYear();
+  var month = months[dateObj.getMonth()];
+  var day = dateObj.getDate();
 
   return month + ' ' + day + ', ' + year;
 });
