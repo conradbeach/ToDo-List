@@ -3,17 +3,18 @@ function extractFilename(filePath) {
 }
 
 module.exports = function Grunt(grunt) {
-  var sources = ['public/javascripts/vendor/all.js',
+  var sources = ['public/javascripts/vendor/bower.js',
+                 'public/javascripts/vendor/backbone.localStorage.js',
+                 'public/javascripts/app.js',
                  'public/javascripts/models/*.js',
                  'public/javascripts/collections/*.js',
-                 'public/javascripts/views/*.js',
-                 'public/javascripts/app.js'];
+                 'public/javascripts/views/*.js']
 
   grunt.initConfig({
     bower_concat: {
       all: {
         dest: {
-          js: 'public/javascripts/vendor/all.js'
+          js: 'public/javascripts/vendor/bower.js'
         },
         dependencies: {
           underscore: 'jquery',
