@@ -1,14 +1,24 @@
+var loadGruntTasks = require('load-grunt-tasks');
+
 function extractFilename(filePath) {
-  return filePath.split('/').pop().match(/(.+)\.hbs/).pop();
+  return filePath.split('/')
+                 .pop()
+                 .match(/(.+)\.hbs/)
+                 .pop();
+}
+
+function removeWhitespace(template) {
+  return template.replace(/ {2,}/mg, '').replace(/\r|\n/mg, '');
 }
 
 module.exports = function Grunt(grunt) {
   var sources = ['public/javascripts/vendor/bower.js',
                  'public/javascripts/vendor/backbone.localStorage.js',
+                 'public/javascripts/handlebars_templates.js',
                  'public/javascripts/app.js',
                  'public/javascripts/models/*.js',
                  'public/javascripts/collections/*.js',
-                 'public/javascripts/views/*.js']
+                 'public/javascripts/views/*.js'];
 
   grunt.initConfig({
     bower_concat: {
@@ -36,7 +46,8 @@ module.exports = function Grunt(grunt) {
           'public/javascripts/handlebars_templates.js': 'handlebars/**/*.hbs'
         },
         options: {
-          processName: extractFilename
+          processName: extractFilename,
+          processContent: removeWhitespace
         }
       }
     },
@@ -50,19 +61,22 @@ module.exports = function Grunt(grunt) {
     },
 
     watch: {
-      files: ['public/javascripts/**/*.js',
-              '!public/javascripts/app.min.js',
-              '!public/javascripts/app.full.js',
-              'handlebars/*.hbs'],
-      tasks: ['concat', 'handlebars']
+      js: {
+        files: ['public/javascripts/**/*.js',
+                '!public/javascripts/app.min.js',
+                '!public/javascripts/app.full.js',
+                '!public/javascripts/handlebars_templates.js'],
+        tasks: ['concat']
+      },
+
+      handlebars: {
+        files: ['handlebars/*.hbs'],
+        tasks: ['handlebars', 'concat']
+      }
     }
   });
 
-  grunt.loadNpmTasks('grunt-bower-concat');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-handlebars');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
+  loadGruntTasks(grunt);
 
-  grunt.registerTask('default', ['bower_concat', 'concat', 'handlebars']);
+  grunt.registerTask('default', ['bower_concat', 'handlebars', 'concat']);
 };
