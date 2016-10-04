@@ -27,7 +27,7 @@
 
       <h1>Todos</h1>
       <p class="circle highlighted">0</p>
-      <a href="#">Add new to do</a>
+      <a href="#" id="new-todo">Add new to do</a>
 
       <ul></ul>
     </main>
@@ -49,6 +49,18 @@
     </aside>
   </body>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="javascripts/todos.js"></script>
+  <!-- <script src="javascripts/app.full.js"></script> -->
+
+  <script src="javascripts/vendor/bower.js"></script>
+  <script src="javascripts/vendor/backbone.localStorage.js"></script>
+  <script src="javascripts/handlebars_templates.js"></script>
+  <script src="javascripts/app.js"></script>
+  <script src="javascripts/routers/router.js"></script>
+  <script src="javascripts/models/todo.js"></script>
+  <script src="javascripts/collections/todos.js"></script>
+  <script src="javascripts/views/app_view.js"></script>
+  <script src="javascripts/views/menu_item.js"></script>
+  <script src="javascripts/views/menu.js"></script>
+  <script src="javascripts/views/todo.js"></script>
+  <script src="javascripts/views/todos.js"></script>
 </html>

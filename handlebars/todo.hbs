@@ -1,0 +1,13 @@
+<li class="{{ternary completed 'complete' ''}}">
+  <span>
+    <strong>{{title}}</strong>
+    {{#if description}}
+      : {{description}}
+    {{/if}}
+
+    {{#if date}}
+      <time>{{formatDate date}}</time>
+    {{/if}}
+  </span>
+  <a href="#"></a>
+</li>
