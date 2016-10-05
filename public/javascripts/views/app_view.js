@@ -9,6 +9,18 @@ var AppView = Backbone.View.extend({
     'click input[name="complete"]': 'toggleCompleted'
   },
 
+  initialize: function() {
+    this.listenTo(app.todos, 'update', this.updateTodosCount);
+
+    this.updateTodosCount();
+  },
+
+  updateTodosCount: function() {
+    var count = app.todos.length;
+
+    this.$('main > p').html(count);
+  },
+
   toggleTodoPane: function() {
     if (this.$todoPane.hasClass('hidden')) {
       this.$todoPane.removeClass();
@@ -36,7 +48,7 @@ var AppView = Backbone.View.extend({
 
       model = app.todos.get(todoId);
       model.set(todoAttributes);
-      model.save()
+      model.save();
     } else {
       model = app.todos.create(todoAttributes);
     }
