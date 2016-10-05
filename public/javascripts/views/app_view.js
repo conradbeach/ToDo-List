@@ -3,10 +3,10 @@ var AppView = Backbone.View.extend({
   $todoPane: this.$('aside'),
 
   events: {
-    'click input[name="complete"]': 'completeTask'
     'click #new-todo': 'toggleTodoPane',
     'click aside': 'shouldCloseTodoPane',
     'click input[name="save"]': 'saveTodo',
+    'click input[name="complete"]': 'toggleCompleted'
   },
 
   toggleTodoPane: function() {
@@ -43,6 +43,7 @@ var AppView = Backbone.View.extend({
 
     this.toggleTodoPane();
 
+    return model;
   },
 
   readForm: function() {
@@ -85,7 +86,13 @@ var AppView = Backbone.View.extend({
 
     this.toggleTodoPane();
   },
+
+  toggleCompleted: function(event) {
     event.preventDefault();
+
+    var model = this.saveTodo(event);
+
+    model.toggleCompleted();
   }
 });
 

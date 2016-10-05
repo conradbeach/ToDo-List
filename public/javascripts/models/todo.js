@@ -3,5 +3,11 @@ var Todo = Backbone.Model.extend({
     title: '',
     description: '',
     completed: false
+  },
+
+  toggleCompleted: function() {
+    this.save({
+      completed: !this.get('completed')
+    });
   }
 });
