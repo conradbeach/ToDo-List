@@ -1,39 +1,48 @@
 var AppView = Backbone.View.extend({
   el: $('body'),
+  $todoPane: this.$('aside'),
 
   events: {
-    'click #new-todo': 'toggleTaskPane',
-    'click aside': 'shouldCloseTaskPane',
-    'click input[name="save"]': 'saveTask',
     'click input[name="complete"]': 'completeTask'
+    'click #new-todo': 'toggleTodoPane',
+    'click aside': 'shouldCloseTodoPane',
+    'click input[name="save"]': 'saveTodo',
   },
 
-  toggleTaskPane: function() {
-    var $taskPane = this.$('aside');
-
-    if ($taskPane.hasClass('hidden')) {
-      $taskPane.removeClass();
+  toggleTodoPane: function() {
+    if (this.$todoPane.hasClass('hidden')) {
+      this.$todoPane.removeClass();
     } else {
-      $taskPane.addClass('hidden');
-      $taskPane.children('form')[0].reset();
-      $taskPane.removeAttr('data-index'); // TODO: Do I need this?
+      this.$todoPane.addClass('hidden');
+      this.$todoPane.children('form')[0].reset();
+      this.$todoPane.removeAttr('data-todo-id');
     }
   },
 
-  shouldCloseTaskPane: function(event) {
+  shouldCloseTodoPane: function(event) {
     if (event.target === this.$('aside')[0]) {
-      this.toggleTaskPane();
+      this.toggleTodoPane();
     }
   },
 
-  saveTask: function(event) {
+  saveTodo: function(event) {
     event.preventDefault();
 
     var todoAttributes = this.readForm();
+    var todoId = this.$todoPane.attr('data-todo-id');
 
-    app.todos.create(todoAttributes);
+    if (todoId) {
+      _.extend(todoAttributes, { id: todoId });
 
-    this.toggleTaskPane();
+      model = app.todos.get(todoId);
+      model.set(todoAttributes);
+      model.save()
+    } else {
+      model = app.todos.create(todoAttributes);
+    }
+
+    this.toggleTodoPane();
+
   },
 
   readForm: function() {
@@ -44,7 +53,7 @@ var AppView = Backbone.View.extend({
     var year = this.$('input[name="year"]').val().trim();
 
     todoAttributes.title = this.$('input[name="title"]').val().trim();
-    todoAttributes.description = $('textarea').val().trim();
+    todoAttributes.description = this.$('textarea').val().trim();
     todoAttributes.dueDate = this.createDate(day, month, year);
 
     return todoAttributes;
@@ -62,7 +71,20 @@ var AppView = Backbone.View.extend({
     return new Date(cleanYear, cleanMonth - 1, cleanDay);
   },
 
-  completeTask: function(event) {
+  editTodo: function(model) {
+    var modelData = model.toJSON();
+    var date = new Date(modelData.dueDate);
+
+    this.$('input[name="title"]').val(modelData.title);
+    this.$('input[name="day"]').val(date.getDate() || '');
+    this.$('input[name="month"]').val(date.getMonth() + 1 || '');
+    this.$('input[name="year"]').val(date.getFullYear() || '');
+    this.$('textarea').val(modelData.description);
+
+    this.$todoPane.attr('data-todo-id', modelData.id);
+
+    this.toggleTodoPane();
+  },
     event.preventDefault();
   }
 });

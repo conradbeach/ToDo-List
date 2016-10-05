@@ -1,6 +1,14 @@
 app = {
-  templates: JST
+  templates: JST,
+
+  editTodo: function(model) {
+    app.appView.editTodo(model);
+  }
 };
+
+_.extend(app, Backbone.Events);
+
+app.on('edit', app.editTodo);
 
 Handlebars.registerHelper('formatDate', function(date) {
   var dateObj = new Date(date);
