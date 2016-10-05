@@ -19,6 +19,7 @@ var MenuItemView = Backbone.View.extend({
 
     if (this.group === app.todoFilter) {
       this.$el.addClass('selected');
+      this.$('span').addClass('highlighted');
     }
   },
 

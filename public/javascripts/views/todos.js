@@ -3,7 +3,7 @@ var TodosView = Backbone.View.extend({
   collection: app.todos,
 
   initialize: function() {
-    this.listenTo(this.collection, 'add', this.renderModel);
+    this.listenTo(this.collection, 'update change', this.render);
     this.listenTo(app.router, 'route', this.render);
 
     this.render();

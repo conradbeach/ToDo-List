@@ -36,13 +36,13 @@ var Todos = Backbone.Collection.extend({
     var currentTodos;
 
     if (app.todoFilter === 'all-false') {
-      currentTodos = this.collection.where(function(model) {
+      currentTodos = this.where(function(model) {
         return !model.get('completed');
       });
     } else {
       groups = this.groups();
 
-      currentTodos = groups[app.todoFilter];
+      currentTodos = groups[app.todoFilter] || [];
     }
 
     return currentTodos;
