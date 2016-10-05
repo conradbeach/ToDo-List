@@ -69,10 +69,6 @@ nav .todos h1 {
   width: 100%;
 }
 
-nav .todos h1 span {
-  float: right;
-}
-
 nav .todos:after {
   display: block;
   content: "";
@@ -86,7 +82,7 @@ nav .todos li {
   width: 100%;
 }
 
-nav .todos span {
+nav span {
   float: right;
 }
 
@@ -95,7 +91,8 @@ nav li {
   margin-top: 25px;
 }
 
-nav .completed li {
+nav .completed li,
+nav .completed span {
   text-decoration: line-through;
 }
 

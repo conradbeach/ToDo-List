@@ -1,5 +1,22 @@
 this["JST"] = this["JST"] || {};
 
+this["JST"]["menu_item"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return alias4(((helper = (helper = helpers.dueDate || (depth0 != null ? depth0.dueDate : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"dueDate","hash":{},"data":data}) : helper)))
+    + "<span class=\"circle\">"
+    + alias4(((helper = (helper = helpers.count || (depth0 != null ? depth0.count : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"count","hash":{},"data":data}) : helper)))
+    + "</span>";
+},"useData":true});
+
+this["JST"]["menu"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "<section class=\"todos\"><h1>Todos<span class=\"circle\">"
+    + container.escapeExpression(((helper = (helper = helpers.incompleteCount || (depth0 != null ? depth0.incompleteCount : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"incompleteCount","hash":{},"data":data}) : helper)))
+    + "</span></h1><ul></ul></section><section class=\"completed\"><h1>Completed</h1><ul></ul></section>";
+},"useData":true});
+
 this["JST"]["todo"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
 
