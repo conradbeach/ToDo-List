@@ -2,6 +2,10 @@ var MenuItemView = Backbone.View.extend({
   tagName: 'li',
   template: app.templates.menu_item,
 
+  events: {
+    click: 'navigate'
+  },
+
   initialize: function(options) {
     this.group = options.group;
     this.count = options.count;
@@ -12,5 +16,13 @@ var MenuItemView = Backbone.View.extend({
 
   render: function() {
     this.$el.html(this.template({ dueDate: this.date, count: this.count }));
+
+    if (this.group === app.todoFilter) {
+      this.$el.addClass('selected');
+    }
+  },
+
+  navigate: function() {
+    app.trigger('navigate', this.group);
   }
 });

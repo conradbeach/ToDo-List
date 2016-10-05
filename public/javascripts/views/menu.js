@@ -4,6 +4,7 @@ var MenuView = Backbone.View.extend({
 
   initialize: function() {
     this.listenTo(app.todos, 'update sync', this.render);
+    this.listenTo(app.router, 'route', this.render);
 
     this.render();
   },

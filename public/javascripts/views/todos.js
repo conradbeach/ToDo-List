@@ -4,12 +4,17 @@ var TodosView = Backbone.View.extend({
 
   initialize: function() {
     this.listenTo(this.collection, 'add', this.renderModel);
+    this.listenTo(app.router, 'route', this.render);
 
     this.render();
   },
 
   render: function() {
-    this.collection.each(function(model) {
+    var currentTodos = this.collection.currentTodos();
+
+    this.$el.html('');
+
+    _(currentTodos).each(function(model) {
       this.renderModel(model);
     }, this);
   },

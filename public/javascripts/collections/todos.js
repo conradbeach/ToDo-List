@@ -21,11 +21,31 @@ var Todos = Backbone.Collection.extend({
       var date = new Date(model.get('dueDate'));
 
       if (date.valueOf()) {
-        return (date.getMonth() + 1) + '/' + date.getFullYear() + '-' + model.get('completed');
+        return app.createGroupName(
+          (date.getMonth() + 1) + '/' + date.getFullYear(),
+          model.get('completed')
+        );
       } else {
-        return 'No Due Date-' + model.get('completed');
+        return app.createGroupName('No Due Date', model.get('completed'));
       }
     });
+  },
+
+  currentTodos: function() {
+    var groups;
+    var currentTodos;
+
+    if (app.todoFilter === 'all-false') {
+      currentTodos = this.collection.where(function(model) {
+        return !model.get('completed');
+      });
+    } else {
+      groups = this.groups();
+
+      currentTodos = groups[app.todoFilter];
+    }
+
+    return currentTodos;
   }
 });
 

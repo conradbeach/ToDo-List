@@ -3,12 +3,21 @@ app = {
 
   editTodo: function(model) {
     app.appView.editTodo(model);
+  },
+
+  createGroupName: function(date, completed) {
+    return date + '-' + completed;
+  },
+
+  navigate: function(group) {
+    this.router.navigate(group, { trigger: true });
   }
 };
 
 _.extend(app, Backbone.Events);
 
 app.on('edit', app.editTodo);
+app.on('navigate', app.navigate);
 
 Handlebars.registerHelper('formatDate', function(date) {
   var dateObj = new Date(date);

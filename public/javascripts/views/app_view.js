@@ -11,17 +11,20 @@ var AppView = Backbone.View.extend({
 
   initialize: function() {
     this.listenTo(app.todos, 'update', this.updateTodosCount);
+    this.listenTo(app.router, 'route', this.updateTodosCount);
 
     this.updateTodosCount();
   },
 
   updateTodosCount: function() {
-    var count = app.todos.length;
+    var count = app.todos.currentTodos().length;
 
     this.$('main > p').html(count);
   },
 
-  toggleTodoPane: function() {
+  toggleTodoPane: function(event) {
+    if (event) { event.preventDefault(); }
+
     if (this.$todoPane.hasClass('hidden')) {
       this.$todoPane.removeClass();
     } else {
