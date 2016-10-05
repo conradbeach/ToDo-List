@@ -50,3 +50,5 @@ var Todos = Backbone.Collection.extend({
 });
 
 app.todos = new Todos();
+
+app.listenTo(app.todos, 'change', app.sortTodos);

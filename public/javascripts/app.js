@@ -2,7 +2,11 @@ app = {
   templates: JST,
 
   editTodo: function(model) {
-    app.appView.editTodo(model);
+    this.appView.editTodo(model);
+  },
+
+  sortTodos: function() {
+    this.todos.sort();
   },
 
   createGroupName: function(date, completed) {
