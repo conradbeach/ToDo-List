@@ -1,13 +1,11 @@
-<li class="{{ternary completed 'complete' ''}}">
-  <span>
-    <strong>{{title}}</strong>
-    {{#if description}}
-      : {{description}}
-    {{/if}}
+<span>
+  <strong>{{title}}</strong>
+  {{#if description}}
+    : {{description}}
+  {{/if}}
 
-    {{#if dueDate}}
-      <time>{{formatDate dueDate}}</time>
-    {{/if}}
-  </span>
-  <a href="#"></a>
-</li>
+  {{#if dueDate}}
+    <time>{{formatDate dueDate}}</time>
+  {{/if}}
+</span>
+<a href="#"></a>
