@@ -9,11 +9,15 @@ var Todos = Backbone.Collection.extend({
   },
 
   incompleteCount: function() {
-    var counts = this.countBy(function(model) {
-      return model.get('completed');
-    });
+    return this.incompleteTodos().length;
+  },
 
-    return counts.false;
+  completeTodos: function() {
+    return this.where({ completed: true });
+  },
+
+  incompleteTodos: function() {
+    return this.where({ completed: false });
   },
 
   groups: function() {
@@ -36,9 +40,9 @@ var Todos = Backbone.Collection.extend({
     var currentTodos;
 
     if (app.todoFilter === 'all-false') {
-      currentTodos = this.where(function(model) {
-        return !model.get('completed');
-      });
+      currentTodos = this.incompleteTodos();
+    } else if (app.todoFilter === 'all-true') {
+      currentTodos = this.completeTodos();
     } else {
       groups = this.groups();
 

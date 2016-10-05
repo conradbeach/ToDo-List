@@ -38,6 +38,11 @@ nav h1 {
   font-size: 1.25em;
 }
 
+nav h1 span {
+  margin-top: 4px;
+}
+
+nav h1:hover,
 nav li:hover {
   cursor: pointer;
 }
@@ -101,18 +106,28 @@ nav .selected {
   background-color: transparent;
   position: relative;
   z-index: 0;
+}
+
+nav li.selected {
   color: #fff;
 }
 
-.selected::before {
+nav .selected::after {
   content: " ";
   position: absolute;
   width: 335px;
-  height: 40px;
   top: -12px;
   left: -135px;
   z-index: -1;
   background-color: #383f5f;
+}
+
+nav h1.selected::after {
+  height: 50px;
+}
+
+nav li.selected::after {
+  height: 40px;
 }
 
 /* Nav Toggle */

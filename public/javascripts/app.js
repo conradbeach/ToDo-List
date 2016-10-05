@@ -13,8 +13,8 @@ app = {
     return date + '-' + completed;
   },
 
-  navigate: function(group) {
-    this.router.navigate(group, { trigger: true });
+  navigate: function(location) {
+    this.router.navigate(location, { trigger: true });
   }
 };
 
