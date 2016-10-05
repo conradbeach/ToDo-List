@@ -6,11 +6,11 @@ var AppView = Backbone.View.extend({
     'click #new-todo': 'toggleTodoPane',
     'click aside': 'shouldCloseTodoPane',
     'click input[name="save"]': 'saveTodo',
-    'click input[name="complete"]': 'toggleCompleted'
+    'click input[name="complete"]': 'toggleCompletion'
   },
 
   initialize: function() {
-    this.listenTo(app.todos, 'update', this.updateTodosCount);
+    this.listenTo(app.todos, 'update change', this.updateTodosCount);
     this.listenTo(app.router, 'route', this.updateTodosCount);
 
     this.updateTodosCount();
@@ -102,12 +102,12 @@ var AppView = Backbone.View.extend({
     this.toggleTodoPane();
   },
 
-  toggleCompleted: function(event) {
+  toggleCompletion: function(event) {
     event.preventDefault();
 
     var model = this.saveTodo(event);
 
-    model.toggleCompleted();
+    model.toggleCompletion();
   }
 });
 

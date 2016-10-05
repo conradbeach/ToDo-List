@@ -3,7 +3,8 @@ var TodoView = Backbone.View.extend({
   template: app.templates.todo,
 
   events: {
-    'click span': 'edit',
+    click: 'edit',
+    'click span': 'toggleCompletion',
     'click a': 'destroy'
   },
 
@@ -27,8 +28,16 @@ var TodoView = Backbone.View.extend({
     app.trigger('edit', this.model);
   },
 
+  toggleCompletion: function(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    this.model.toggleCompletion();
+  },
+
   destroy: function(event) {
     event.preventDefault();
+    event.stopImmediatePropagation();
 
     this.model.destroy();
     this.remove();
