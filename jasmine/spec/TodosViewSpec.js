@@ -2,7 +2,7 @@ describe('TodosView view', function() {
   beforeEach(function() {
     this.seedCollection();
 
-    setFixtures('<main><ul></ul></main>');
+    loadFixtures('body.html');
 
     this.view = new TodosView({ el: 'main ul' });
   });

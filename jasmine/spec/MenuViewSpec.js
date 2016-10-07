@@ -2,7 +2,7 @@ describe('MenuView view', function() {
   beforeEach(function() {
     this.seedCollection();
 
-    setFixtures('<nav></nav>');
+    loadFixtures('body.html');
 
     this.view = new MenuView({ el: 'nav' });
   });

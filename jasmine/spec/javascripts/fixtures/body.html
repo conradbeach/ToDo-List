@@ -1,0 +1,31 @@
+<body>
+  <input type="checkbox" name="nav-toggle" id="nav-toggle">
+
+  <nav></nav>
+
+  <main>
+    <label for="nav-toggle"><img src="/public/images/hamburger-menu-icon.png" alt="menu-icon"></label>
+
+    <h1>Todos</h1>
+    <p class="circle highlighted">0</p>
+    <a href="#" id="new-todo">Add new to do</a>
+
+    <ul></ul>
+  </main>
+
+  <aside class="hidden">
+    <form class="modal">
+      <label for="title">Title</label>
+      <input type="text" name="title" placeholder="Title">
+      <label for="day">Due Date</label>
+      <!-- FIXME: The below min and max validations aren't working. I believe it's because my event handlers don't actually allow the submit event to fire. -->
+      <input type="number" name="month" placeholder="Month" min="1" max="12"> /
+      <input type="number" name="day" placeholder="Day" min="1" max="31"> /
+      <input type="number" name="year" placeholder="Year" min="1" max="9999">
+      <label for="description">Description</label>
+      <textarea name="description" rows="8" cols="40" placeholder="Description"></textarea>
+      <input type="submit" name="save" value="Save" class="button">
+      <input type="submit" name="complete" value="Toggle Completion" class="button">
+    </form>
+  </aside>
+</body>
