@@ -1,8 +1,6 @@
 describe('Todos collection', function() {
   beforeEach(function() {
-    app.todos.reset();
-    app.todos.create({ completed: true, dueDate: new Date('10-20-2016') });
-    app.todos.create({ completed: false, dueDate: new Date('5-20-2016') });
+    this.seedCollection();
   });
 
   it('returns the correct number of incomplete todos', function() {
