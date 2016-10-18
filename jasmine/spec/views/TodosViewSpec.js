@@ -1,4 +1,4 @@
-describe('TodosView view', function() {
+describe('TodosView', function() {
   beforeEach(function() {
     this.seedCollection();
 
