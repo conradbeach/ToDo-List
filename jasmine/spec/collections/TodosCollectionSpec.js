@@ -6,7 +6,7 @@ describe('Todos collection', function() {
   it('returns the correct number of incomplete todos', function() {
     expect(app.todos.incompleteCount()).toEqual(1);
   });
-  
+
   it('returns complete todos', function() {
     expect(app.todos.completeTodos().length).toEqual(1);
     expect(app.todos.completeTodos()[0].get('dueDate')).toEqual(new Date('10-20-2016').toJSON());
