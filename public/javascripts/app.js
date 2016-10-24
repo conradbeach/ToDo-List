@@ -9,10 +9,6 @@ app = {
     this.todos.sort();
   },
 
-  createGroupName: function(date, completed) {
-    return date + '-' + completed;
-  },
-
   navigate: function(location) {
     this.router.navigate(location, { trigger: true });
   }
@@ -34,8 +30,4 @@ Handlebars.registerHelper('formatDate', function(date) {
   var day = dateObj.getDate();
 
   return month + ' ' + day + ', ' + year;
-});
-
-Handlebars.registerHelper('ternary', function(condition, yes, no) {
-  return condition ? yes : no;
 });

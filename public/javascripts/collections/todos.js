@@ -25,12 +25,9 @@ var Todos = Backbone.Collection.extend({
       var date = new Date(model.get('dueDate'));
 
       if (date.valueOf()) {
-        return app.createGroupName(
-          (date.getMonth() + 1) + '/' + date.getFullYear(),
-          model.get('completed')
-        );
+        return (date.getMonth() + 1) + '/' + date.getFullYear() + '-' + model.get('completed');
       } else {
-        return app.createGroupName('No Due Date', model.get('completed'));
+        return 'No Due Date-' + model.get('completed');
       }
     });
   },

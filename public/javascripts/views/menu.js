@@ -48,7 +48,9 @@ var MenuView = Backbone.View.extend({
       headerClass = 'completed';
     }
 
-    this.$('section.' + headerClass + ' h1').addClass('selected').children('span').addClass('highlighted');
+    this.$('section.' + headerClass + ' h1').addClass('selected')
+                                            .children('span')
+                                            .addClass('highlighted');
   },
 
   allTodos: function() {

@@ -41,7 +41,7 @@ var AppView = Backbone.View.extend({
   },
 
   saveTodo: function(event) {
-    event.preventDefault();
+    if (event) { event.preventDefault(); }
 
     var todoAttributes = this.readForm();
     var todoId = this.$todoPane.attr('data-todo-id');
@@ -105,7 +105,7 @@ var AppView = Backbone.View.extend({
   toggleCompletion: function(event) {
     event.preventDefault();
 
-    var model = this.saveTodo(event);
+    var model = this.saveTodo();
 
     model.toggleCompletion();
   }
